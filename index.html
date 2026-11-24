@@ -3,296 +3,561 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>היום ומחר — דשבורד אישי</title>
+  <title>היום ומחר — מרכז שליטה אישי</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f8fb;
+      --bg: #f3f5f9;
       --surface: #ffffff;
+      --surface-2: #f8fafc;
       --text: #0f172a;
       --muted: #64748b;
       --border: #e2e8f0;
+      --shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
       --blue: #2563eb;
-      --blue-bg: #eff6ff;
+      --blue-soft: #eff6ff;
       --orange: #ea580c;
-      --orange-bg: #fff7ed;
+      --orange-soft: #fff7ed;
       --red: #dc2626;
-      --red-bg: #fef2f2;
+      --red-soft: #fef2f2;
       --green: #16a34a;
-      --green-bg: #f0fdf4;
+      --green-soft: #f0fdf4;
+    }
+
+    body.theme-paper {
+      --bg: #f5f1e8;
+      --surface: #fcfaf5;
+      --surface-2: #f3ede0;
+      --text: #292524;
+      --muted: #78716c;
+      --border: #e7e0d2;
     }
 
     body.theme-dark {
       --bg: #0b1120;
-      --surface: #111827;
-      --text: #f8fafc;
+      --surface: #131c31;
+      --surface-2: #1a253c;
+      --text: #f1f5f9;
       --muted: #94a3b8;
       --border: #1e293b;
-      --blue-bg: #172554;
-      --orange-bg: #431407;
-      --red-bg: #450a0a;
-      --green-bg: #052e16;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      --blue-soft: rgba(37, 99, 235, 0.16);
+      --orange-soft: rgba(234, 88, 12, 0.16);
+      --red-soft: rgba(220, 38, 38, 0.16);
+      --green-soft: rgba(22, 163, 74, 0.16);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Heebo', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.55;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .container { max-width: 920px; margin: 0 auto; padding: 20px 16px 64px; }
-    header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
-    h1 { margin: 0; font-size: 1.6rem; }
-    .meta { color: var(--muted); font-size: 0.9rem; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    button {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+    .app-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
     }
-    button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .tab {
-      background: transparent;
-      border: none;
-      border-bottom: 3px solid transparent;
-      border-radius: 0;
-      padding: 10px 14px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-
-    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; font-size: 0.85rem; }
-    .pill { padding: 4px 10px; border-radius: 999px; font-weight: 600; }
-    .pill.blue { background: var(--blue-bg); color: var(--blue); }
-    .pill.orange { background: var(--orange-bg); color: var(--orange); }
-    .pill.red { background: var(--red-bg); color: var(--red); }
-    .pill.green { background: var(--green-bg); color: var(--green); }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-right: 6px solid var(--blue);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
+    /* Header */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
+      margin-bottom: 18px;
     }
-    .card.status-urgent { border-right-color: var(--orange); background: var(--orange-bg); }
-    .card.status-overdue { border-right-color: var(--red); background: var(--red-bg); }
-    .card.status-done { border-right-color: var(--green); background: var(--green-bg); opacity: 0.85; }
+    .title-area h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-    .card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
-    .card-sub { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
-    .badge { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-left: 6px; }
-    .badge-urgent { background: var(--orange); color: #fff; }
-    .badge-overdue { background: var(--red); color: #fff; }
-    .badge-done { background: var(--green); color: #fff; }
-    .badge-upcoming { background: var(--blue); color: #fff; }
-    .check-btn { min-width: 92px; text-align: center; }
+    .btn {
+      font-family: inherit;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.1s, opacity 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
 
-    .setup-box {
+    /* Quick Links Bar like Tzofen */
+    .quick-links {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      overflow-x: auto;
+    }
+    .q-link {
+      text-decoration: none;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+    }
+
+    /* KPI Summary Strip */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
       background: var(--surface);
       border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+    .stat-num {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Navigation Pills */
+    .nav-tabs {
+      display: flex;
+      background: var(--surface);
+      padding: 5px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      gap: 4px;
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+    .nav-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 9px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-tab.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    /* Search & Filter */
+    .search-row {
+      margin-bottom: 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
       border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+
+    /* Task Cards */
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 15px 16px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-card::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--blue);
+    }
+    .task-card.urgent::before { background: var(--orange); }
+    .task-card.overdue::before { background: var(--red); }
+    .task-card.done { opacity: 0.65; }
+    .task-card.done::before { background: var(--green); }
+
+    .task-main { flex: 1; min-width: 0; }
+    .task-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+    .tag-blue { background: var(--blue-soft); color: var(--blue); }
+    .tag-orange { background: var(--orange-soft); color: var(--orange); }
+    .tag-red { background: var(--red-soft); color: var(--red); }
+    .tag-green { background: var(--green-soft); color: var(--green); }
+    .course-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .task-title {
+      font-size: 1.04rem;
+      font-weight: 700;
+      margin: 2px 0;
+    }
+    .task-card.done .task-title {
+      text-decoration: line-through;
+    }
+    .task-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .task-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Circular Checkbox like Tzofen */
+    .circle-check {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 1rem;
+      color: transparent;
+      transition: all 0.15s;
+    }
+    .circle-check:hover {
+      border-color: var(--green);
+    }
+    .task-card.done .circle-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    /* Setup Panel */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
+      box-shadow: var(--shadow);
     }
-    input {
+    .panel input {
       width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      margin-top: 6px;
-      margin-bottom: 10px;
+      background: var(--surface-2);
+      color: var(--text);
+      margin: 8px 0 12px;
       direction: ltr;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px dashed var(--border);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <h1>היום ומחר — דשבורד אישי</h1>
-        <div class="meta" id="sync-status">מוכן לטעינה</div>
+  <div class="app-wrap">
+    <div class="top-bar">
+      <div class="title-area">
+        <h1>היום ומחר</h1>
+        <div class="subtitle" id="sync-status">מתחבר לסוכן...</div>
       </div>
-      <div class="actions">
-        <button class="primary" onclick="syncNow()">🔄 סרוק מייל ועדכן יומן</button>
-        <button onclick="toggleTheme()">🌓 מצב תצוגה</button>
-        <button onclick="toggleSetup()">⚙️ הגדרת קישור</button>
+      <div class="top-actions">
+        <button class="btn btn-primary" id="sync-btn" onclick="syncNow()">🔄 סרוק מייל</button>
+        <button class="btn" onclick="cycleTheme()">🎨 מראה</button>
+        <button class="btn" onclick="toggleSettings()">⚙️</button>
       </div>
-    </header>
-
-    <div class="setup-box" id="setup-box" style="display:none;">
-      <strong>כתובת ה-Web App של Google Apps Script:</strong>
-      <input id="api-url-input" type="text" placeholder="[https://script.google.com/macros/s/.../exec](https://script.google.com/macros/s/.../exec)" />
-      <button class="primary" onclick="saveApiUrl()">שמור קישור</button>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="today" onclick="switchTab('today')">היום והקרוב</button>
-      <button class="tab" data-tab="deadlines" onclick="switchTab('deadlines')">דדליינים</button>
-      <button class="tab" data-tab="courses" onclick="switchTab('courses')">קורסים ומקורות</button>
-      <button class="tab" data-tab="done" onclick="switchTab('done')">הושלמו</button>
+    <!-- קישורים מהירים -->
+    <div class="quick-links">
+      <a class="q-link" href="https://lemida.biu.ac.il/my/" target="_blank">🎓 למדה</a>
+      <a class="q-link" href="https://inbar.biu.ac.il/" target="_blank">🏛️ אינ-בר</a>
+      <a class="q-link" href="https://calendar.google.com/" target="_blank">📅 יומן גוגל</a>
+      <a class="q-link" href="https://mail.google.com/" target="_blank">✉️ Gmail</a>
+      <a class="q-link" href="https://drive.google.com/" target="_blank">📁 Drive</a>
     </div>
 
-    <div class="legend">
-      <span class="pill blue">כחול — קרוב / שוטף</span>
-      <span class="pill orange">כתום — דחוף (עד 48 שעות)</span>
-      <span class="pill red">אדום — איחור</span>
-      <span class="pill green">ירוק — בוצע</span>
+    <!-- הגדרות קישור -->
+    <div class="panel" id="settings-panel" style="display:none;">
+      <strong>חיבור ל-Google Apps Script (כתובת /exec):</strong>
+      <input type="text" id="api-input" placeholder="https://script.google.com/macros/s/.../exec" />
+      <button class="btn btn-primary" onclick="saveApi()">שמור והתחבר</button>
     </div>
 
-    <div id="content"></div>
+    <!-- מדדים עליונים -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-open" style="color: var(--blue);">0</div>
+        <div class="stat-label">משימות פתוחות</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-urgent" style="color: var(--orange);">0</div>
+        <div class="stat-label">דחופות / באיחור</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-done" style="color: var(--green);">0</div>
+        <div class="stat-label">הושלמו</div>
+      </div>
+    </div>
+
+    <!-- לשוניות -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="today" onclick="setTab('today')">היום והקרוב</button>
+      <button class="nav-tab" data-tab="deadlines" onclick="setTab('deadlines')">דדליינים</button>
+      <button class="nav-tab" data-tab="courses" onclick="setTab('courses')">קורסים ומקורות</button>
+      <button class="nav-tab" data-tab="done" onclick="setTab('done')">הושלמו</button>
+    </div>
+
+    <!-- חיפוש מהיר -->
+    <div class="search-row">
+      <input class="search-input" type="text" id="search-box" placeholder="חיפוש לפי קורס, משימה או מילת מפתח..." oninput="render()" />
+    </div>
+
+    <div id="list-container"></div>
   </div>
 
   <script>
-    const DEFAULT_API_URL = ""; // אפשר להדביק כאן את כתובת /exec או דרך כפתור "הגדרת קישור"
-    let state = { items: [], last_sync: null };
+    // הדבק כאן את כתובת ה-/exec שלך בין המירכאות כדי שתישמר קבוע בכל מכשיר:
+    const HARDCODED_API_URL = "";
+
+    let state = { items: [], last_sync: "" };
     let currentTab = "today";
+    const themes = ["", "theme-paper", "theme-dark"];
+    let themeIdx = Number(localStorage.getItem("THEME_IDX") || 0);
+    if (themes[themeIdx]) document.body.classList.add(themes[themeIdx]);
 
     function getApiUrl() {
-      return localStorage.getItem("DASHBOARD_API_URL") || DEFAULT_API_URL;
+      return localStorage.getItem("DASHBOARD_API_URL") || HARDCODED_API_URL;
     }
 
-    function saveApiUrl() {
-      const val = document.getElementById("api-url-input").value.trim();
+    function toggleSettings() {
+      const el = document.getElementById("settings-panel");
+      document.getElementById("api-input").value = getApiUrl();
+      el.style.display = el.style.display === "none" ? "block" : "none";
+    }
+
+    function saveApi() {
+      const val = document.getElementById("api-input").value.trim();
       localStorage.setItem("DASHBOARD_API_URL", val);
-      document.getElementById("setup-box").style.display = "none";
+      document.getElementById("settings-panel").style.display = "none";
       loadData();
     }
 
-    function toggleSetup() {
-      const box = document.getElementById("setup-box");
-      document.getElementById("api-url-input").value = getApiUrl();
-      box.style.display = box.style.display === "none" ? "block" : "none";
+    function cycleTheme() {
+      if (themes[themeIdx]) document.body.classList.remove(themes[themeIdx]);
+      themeIdx = (themeIdx + 1) % themes.length;
+      if (themes[themeIdx]) document.body.classList.add(themes[themeIdx]);
+      localStorage.setItem("THEME_IDX", String(themeIdx));
     }
 
-    function classifyItem(item) {
-      if (item.done) return { cls: "status-done", label: "בוצע", badgeCls: "badge-done" };
-      if (!item.due_date) {
-        if (item.urgency === "high") return { cls: "status-urgent", label: "דחוף", badgeCls: "badge-urgent" };
-        return { cls: "", label: "קרוב", badgeCls: "badge-upcoming" };
-      }
-      const due = new Date(item.due_date).getTime();
-      if (isNaN(due)) {
-        return item.urgency === "high"
-          ? { cls: "status-urgent", label: "דחוף", badgeCls: "badge-urgent" }
-          : { cls: "", label: "קרוב", badgeCls: "badge-upcoming" };
-      }
-      const diffHours = (due - Date.now()) / (1000 * 60 * 60);
-      if (diffHours < 0) return { cls: "status-overdue", label: "איחור", badgeCls: "badge-overdue" };
-      if (diffHours <= 48 || item.urgency === "high") return { cls: "status-urgent", label: "דחוף", badgeCls: "badge-urgent" };
-      return { cls: "", label: "קרוב", badgeCls: "badge-upcoming" };
-    }
-
-    function switchTab(tab) {
+    function setTab(tab) {
       currentTab = tab;
-      document.querySelectorAll(".tab").forEach(el => el.classList.toggle("active", el.dataset.tab === tab));
+      document.querySelectorAll(".nav-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
       render();
     }
 
-    function render() {
-      const container = document.getElementById("content");
-      document.getElementById("sync-status").textContent =
-        state.last_sync ? `עודכן לאחרונה: ${state.last_sync}` : "טרם בוצעה סריקה";
+    function getStatus(item) {
+      if (item.done) return { cls: "done", tagCls: "tag-green", label: "בוצע", isUrgent: false };
+      if (!item.due_date) {
+        if (item.urgency === "high") return { cls: "urgent", tagCls: "tag-orange", label: "דחוף", isUrgent: true };
+        return { cls: "", tagCls: "tag-blue", label: "שוטף", isUrgent: false };
+      }
+      const due = new Date(item.due_date).getTime();
+      if (isNaN(due)) {
+        const u = item.urgency === "high";
+        return { cls: u ? "urgent" : "", tagCls: u ? "tag-orange" : "tag-blue", label: u ? "דחוף" : "שוטף", isUrgent: u };
+      }
+      const hrs = (due - Date.now()) / 36e5;
+      if (hrs < 0) return { cls: "overdue", tagCls: "tag-red", label: "איחור", isUrgent: true };
+      if (hrs <= 48 || item.urgency === "high") return { cls: "urgent", tagCls: "tag-orange", label: "דחוף", isUrgent: true };
+      return { cls: "", tagCls: "tag-blue", label: "קרוב", isUrgent: false };
+    }
 
-      let list = state.items || [];
-      if (currentTab === "done") list = list.filter(i => i.done);
-      else if (currentTab === "deadlines") list = list.filter(i => !i.done && i.due_date);
-      else if (currentTab === "today") list = list.filter(i => !i.done);
+    function render() {
+      const q = document.getElementById("search-box").value.trim().toLowerCase();
+      const all = state.items || [];
+
+      const openItems = all.filter(i => !i.done);
+      const urgentCount = openItems.filter(i => getStatus(i).isUrgent).length;
+      const doneItems = all.filter(i => i.done);
+
+      document.getElementById("stat-open").textContent = openItems.length;
+      document.getElementById("stat-urgent").textContent = urgentCount;
+      document.getElementById("stat-done").textContent = doneItems.length;
+      document.getElementById("sync-status").textContent = state.last_sync
+        ? `עודכן לאחרונה: ${state.last_sync}`
+        : "מוכן לסריקה";
+
+      let filtered = all.filter(i => {
+        if (!q) return true;
+        return (i.title + " " + i.summary + " " + i.course_or_source).toLowerCase().includes(q);
+      });
+
+      if (currentTab === "done") filtered = filtered.filter(i => i.done);
+      else if (currentTab === "deadlines") filtered = filtered.filter(i => !i.done && i.due_date);
+      else if (currentTab === "today") filtered = filtered.filter(i => !i.done);
+
+      const box = document.getElementById("list-container");
 
       if (currentTab === "courses") {
-        const grouped = {};
-        list.filter(i => !i.done).forEach(i => {
+        const groups = {};
+        filtered.filter(i => !i.done).forEach(i => {
           const k = i.course_or_source || "כללי";
-          grouped[k] = grouped[k] || [];
-          grouped[k].push(i);
+          (groups[k] = groups[k] || []).push(i);
         });
-        container.innerHTML = Object.keys(grouped).length
-          ? Object.entries(grouped).map(([c, arr]) => `<h3>${c} (${arr.length})</h3>${arr.map(renderCard).join("")}`).join("")
-          : "<p>אין פריטים פעילים לפי קורסים או מקורות.</p>";
+        const keys = Object.keys(groups);
+        box.innerHTML = keys.length
+          ? keys.map(k => `<h3 style="margin:18px 0 8px;">${k}</h3>${groups[k].map(cardHtml).join("")}`).join("")
+          : `<div class="empty-state">אין משימות פתוחות לפי קורסים כרגע.</div>`;
         return;
       }
 
-      container.innerHTML = list.length ? list.map(renderCard).join("") : "<p>אין פריטים להצגה בלשונית זו.</p>";
+      box.innerHTML = filtered.length
+        ? filtered.map(cardHtml).join("")
+        : `<div class="empty-state">אין פריטים להצגה בלשונית זו.</div>`;
     }
 
-    function renderCard(item) {
-      const stInfo = classifyItem(item);
-      const dueText = item.due_date ? `⏰ יעד: ${item.due_date.replace("T", " ").slice(0, 16)}` : "ללא תאריך יעד";
-      const calText = item.synced_calendar ? " • 📅 סונכרן ליומן" : "";
+    function cardHtml(item) {
+      const st = getStatus(item);
+      const dueStr = item.due_date ? `⏰ ${item.due_date.replace("T", " ").slice(0, 16)}` : "";
+      const calStr = item.synced_calendar ? `📅 ביומן` : "";
       return `
-        <div class="card ${stInfo.cls}">
-          <div>
-            <div class="card-title">
-              <span class="badge ${stInfo.badgeCls}">${stInfo.label}</span>
-              [${item.course_or_source || "כללי"}] ${item.title}
+        <div class="task-card ${st.cls}">
+          <div class="task-main">
+            <div class="task-top">
+              <span class="tag ${st.tagCls}">${st.label}</span>
+              <span class="course-pill">${item.course_or_source || "כללי"} • ${item.item_type || "פריט"}</span>
             </div>
-            <div>${item.summary || ""}</div>
-            <div class="card-sub">${item.item_type || "פריט"} • ${dueText}${calText}</div>
+            <div class="task-title">${item.title}</div>
+            ${item.summary ? `<div class="task-desc">${item.summary}</div>` : ""}
+            <div class="task-meta">
+              ${dueStr ? `<span>${dueStr}</span>` : ""}
+              ${calStr ? `<span>${calStr}</span>` : ""}
+            </div>
           </div>
-          <button class="check-btn" onclick="toggleDone('${item.id}', ${!item.done})">
-            ${item.done ? "↩️ בטל בוצע" : "✓ סמן כבוצע"}
-          </button>
+          <button class="circle-check" title="סמן כבוצע" onclick="toggleDone('${item.id}', ${!item.done})">✓</button>
         </div>
       `;
     }
 
     async function loadData() {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) {
-        document.getElementById("sync-status").textContent = "לחץ על 'הגדרת קישור' והדבק את כתובת ה-Web App";
+      const url = getApiUrl();
+      if (!url) {
+        document.getElementById("sync-status").textContent = "לחץ על ⚙️ למעלה והדבק את כתובת ה-Web App";
         render();
         return;
       }
-      const res = await fetch(`${apiUrl}?action=data`);
-      state = await res.json();
-      render();
+      try {
+        const res = await fetch(`${url}?action=data`);
+        state = await res.json();
+        render();
+      } catch (err) {
+        document.getElementById("sync-status").textContent = "שגיאה בטעינת נתונים — בדוק הרשאות Web App";
+      }
     }
 
     async function syncNow() {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) return toggleSetup();
-      document.getElementById("sync-status").textContent = "סורק מיילים ומעדכן יומן...";
-      await fetch(`${apiUrl}?action=sync`);
-      await loadData();
+      const url = getApiUrl();
+      if (!url) return toggleSettings();
+      const btn = document.getElementById("sync-btn");
+      btn.disabled = true;
+      btn.textContent = "⏳ סורק...";
+      try {
+        await fetch(`${url}?action=sync`);
+        await loadData();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🔄 סרוק מייל";
+      }
     }
 
     async function toggleDone(id, done) {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) return;
-      await fetch(apiUrl, {
+      const url = getApiUrl();
+      if (!url) return;
+      const target = state.items.find(i => i.id === id);
+      if (target) { target.done = done; render(); }
+      await fetch(url, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "toggle", id, done })
       });
-      setTimeout(loadData, 600);
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle("theme-dark");
+      setTimeout(loadData, 700);
     }
 
     loadData();
